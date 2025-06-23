@@ -7,9 +7,13 @@
     "types": []
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "src/app/core/pages/metas/metas.component.ts",
+    "src/app/core/pages/vendas/vendas.component.ts",
+    "src/app/core/pages/producao/producao.component.ts",
+    
   ]
 }
