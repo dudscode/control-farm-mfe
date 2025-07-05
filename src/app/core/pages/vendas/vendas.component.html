@@ -1,12 +1,26 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 mt-3">
       <h1>Vendas</h1>
     </div>
   </div>
 
   <div class="row">
-    <div class="col-12 col-md-4 p-2">
+    <div class="col-12 col-md-3 order-1 order-md-2">
+      @for(card of dashboardCards; track card){
+
+      <app-dashboard-card
+        [icon]="card.icon | assetUrl"
+        [cardMetric]="card.cardMetric"
+        [efficiencyPercentage]="card.efficiencyPercentage"
+        [label]="card.label"
+        [isCurrency]="card.isCurrency"
+        [isPositive]="card.isPositive"
+      ></app-dashboard-card>
+      }
+    </div>
+
+    <div class="col-12 col-md-9 mt-3 order-2 order-md-2">
       <mat-card class="pt-3 ps-1 pe-3">
         <apx-chart
           [series]="chartSeries"
@@ -15,6 +29,6 @@
           [title]="chartTitle"
         ></apx-chart>
       </mat-card>
-      </div>
+    </div>
   </div>
 </div>
