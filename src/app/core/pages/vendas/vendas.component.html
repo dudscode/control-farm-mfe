@@ -4,6 +4,7 @@
       <h1>Vendas</h1>
     </div>
   </div>
+  @if(!loading){
 
   <div class="row">
     <div class="col-12 col-md-3 order-1 order-md-2">
@@ -23,12 +24,22 @@
     <div class="col-12 col-md-9 mt-3 order-2 order-md-2">
       <mat-card class="pt-3 ps-1 pe-3">
         <apx-chart
-          [series]="chartSeries"
-          [chart]="chartDetails"
-          [xaxis]="xAxis"
-          [title]="chartTitle"
+          [series]="chartOptions.series || []"
+          [chart]="chartOptions.chart!"
+          [xaxis]="chartOptions.xaxis!"
+          [dataLabels]="chartOptions.dataLabels || {}"
+          [plotOptions]="chartOptions.plotOptions!"
+          [title]="chartOptions.title!"
         ></apx-chart>
       </mat-card>
     </div>
   </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>Produtos
+
+      </mat-card>
+    </div>
+  </div>
+  }
 </div>
