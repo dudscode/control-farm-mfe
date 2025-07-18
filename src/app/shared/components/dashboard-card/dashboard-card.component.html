@@ -1,0 +1,27 @@
+<mat-card class="col-12 p-3 mt-3 dashboard-card">
+  <div class="row">
+    <div class="col-8">
+      <h3 class="dashboard-card__title">{{ label }}</h3>
+      <h5 class="dashboard-card__metric">
+        {{
+          isCurrency ? (cardMetric | currency : "BRL") : (cardMetric | number)
+        }}
+      </h5>
+    </div>
+    <div class="col-4 mb-2 dashboard-card__image-container">
+      <img [src]="icon" alt="Icon" class="dashboard-card__icon-img" />
+    </div>
+  </div>
+  <div class="dashboard-card__footer">
+    <span
+      class="dashboard-card__value"
+      [class.dashboard-card__value--positive]="isPositive"
+    >
+      <mat-icon
+        class="dashboard-card__icon"
+        [fontIcon]="trendIcon()"
+      ></mat-icon>
+      {{ efficiencyPercentage }}%</span
+    >{{ (isPositive ? "up" : "down") | titlecase }} from past week
+  </div>
+</mat-card>

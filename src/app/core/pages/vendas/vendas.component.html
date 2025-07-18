@@ -1,1 +1,48 @@
-<p>vendas works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 mt-3 titulo">
+      <h1>Vendas</h1>
+      <button mat-flat-button (click)="openCadastroVendas()">
+        <mat-icon>add</mat-icon>
+        Cadastrar Venda</button>
+    </div>
+  </div>
+  @if(!loading){
+
+  <div class="row">
+    <div class="col-12 col-md-3 order-1 order-md-2">
+      @for(card of dashboardCards; track card){
+
+      <app-dashboard-card
+        [icon]="card.icon | assetUrl"
+        [cardMetric]="card.cardMetric"
+        [efficiencyPercentage]="card.efficiencyPercentage"
+        [label]="card.label"
+        [isCurrency]="card.isCurrency"
+        [isPositive]="card.isPositive"
+      ></app-dashboard-card>
+      }
+    </div>
+
+    <div class="col-12 col-md-9 mt-3 order-2 order-md-2">
+      <mat-card class="pt-3 ps-1 pe-3">
+        <apx-chart
+          [series]="chartOptions.series || []"
+          [chart]="chartOptions.chart!"
+          [xaxis]="chartOptions.xaxis!"
+          [dataLabels]="chartOptions.dataLabels || {}"
+          [plotOptions]="chartOptions.plotOptions!"
+          [title]="chartOptions.title!"
+        ></apx-chart>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>Produtos
+
+      </mat-card>
+    </div>
+  </div>
+  }
+</div>

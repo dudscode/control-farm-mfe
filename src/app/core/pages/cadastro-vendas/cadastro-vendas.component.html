@@ -1,0 +1,39 @@
+<section class="cadastro-venda">
+    <div class="cadastro-venda-header mt-5">
+        <h2>Cadastrar Vendas</h2>
+        <p>Preencha os dados para cadastrar uma nova venda.</p>
+    </div>
+
+
+    <form [formGroup]="formGroupVendas">
+
+        <mat-form-field>
+            <mat-label>Quantidade</mat-label>
+            <input matInput formControlName="quantidade" type="number" placeholder="0 " min="0">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Produto - Safra</mat-label>
+
+            <select matNativeControl formControlName="produto">
+                @for (product of produtos; track product) {
+                <option value="{{product.id}}">{{product.name + ' - ' + product.harvest}}</option>
+                }
+            </select>
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <mat-label>Valor Unitário</mat-label>
+            <input matInput formControlName="preco" type="text" placeholder="R$ 0,00" mask="separator.2"
+                thousandSeparator="." decimalMarker="," prefix="R$ ">
+        </mat-form-field>
+
+    </form>
+    <div class="cadastro-venda-footer mt-8">
+        <button mat-flat-button [disabled]="disableButton()" (click)="cadastrarVenda()">
+            <mat-icon>add</mat-icon>
+            Cadastrar</button>
+    </div>
+
+</section>

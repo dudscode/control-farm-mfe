@@ -9,10 +9,15 @@ module.exports = withNativeFederation({
     './Metas': './src/app/core/pages/metas/metas.component.ts',
     './Producao': './src/app/core/pages/producao/producao.component.ts',
     './Vendas': './src/app/core/pages/vendas/vendas.component.ts',
+    './CadastroVendas': './src/app/core/pages/cadastro-vendas/cadastro-vendas.component.ts',
+    './CadastroProdutos': './src/app/core/pages/cadastro-produtos/cadastro-produtos.component.ts',
+    './CadastroMetas': './src/app/core/pages/cadastro-metas/cadastro-metas.component.ts'
   },
 
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
+  '@angular/material': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/icon': { singleton: true, strictVersion: true, requiredVersion: 'auto' }
   },
 
   skip: [
@@ -25,5 +30,5 @@ module.exports = withNativeFederation({
 
   // Please read our FAQ about sharing libs:
   // https://shorturl.at/jmzH0
-  
+
 });
