@@ -1,15 +1,47 @@
 .dashboard-card {
   padding: 1rem;
-  margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 1rem;
+  }
+
+  &__info {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  &__image-container {
+    flex: 0 0 25%;
+    max-width: 25%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &__icon-img {
+    width: 100%;
+    max-width: 60px;
+    height: auto;
+    object-fit: contain;
+  }
 
   &__title {
     font-size: clamp(14px, 2vw, 16px);
     font-weight: 600;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     color: #6d6e70;
     opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__metric {
@@ -24,24 +56,48 @@
 
   &__footer {
     display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: clamp(13px, 1.8vw, 15px);
     font-weight: 600;
     color: #606060;
-    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
   }
 
   &__value {
     color: #f93c65;
     display: inline-flex;
+    align-items: center;
     gap: 4px;
     padding-right: 4px;
+    font-weight: bold;
+
     &--positive {
       color: #00b69b;
     }
   }
 
-  &__icon-img {
-    width: 100%;
-    height: auto;
+  &__icon {
+    font-size: 1.2em;
+  }
+
+  @media (max-width: 600px) {
+    &__content {
+      flex-direction: row;
+    }
+
+    &__image-container {
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+
+    &__icon-img {
+      max-width: 50px;
+    }
+
+    &__footer {
+      gap: 0.25rem;
+    }
   }
 }

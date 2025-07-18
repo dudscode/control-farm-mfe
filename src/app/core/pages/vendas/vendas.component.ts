@@ -1,14 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexTitleSubtitle,
-  ApexXAxis,
   NgApexchartsModule,
-  ApexYAxis,
-  ApexPlotOptions,
-  ApexDataLabels,
-  ApexLegend,
   ChartComponent,
   ApexOptions,
 } from 'ng-apexcharts';
