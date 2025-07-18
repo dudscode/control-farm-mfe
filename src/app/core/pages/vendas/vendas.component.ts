@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -20,17 +20,19 @@ import { AssetUrlPipe } from '../../../shared/pipes/asset-url.pipe';
 import { VendasService } from '../../services/vendas.service';
 import { DashboardCardData } from '../../domain/vendas/dashboard-card-data.interface';
 import { ChartDataService } from '../../services/chart-data.service';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
   selector: 'app-vendas',
   imports: [
-    CommonModule,
     MatCardModule,
     MatIconModule,
     NgApexchartsModule,
     DashboardCardComponent,
     AssetUrlPipe,
+    MatButtonModule
   ],
   templateUrl: './vendas.component.html',
   styleUrl: './vendas.component.scss',
@@ -40,12 +42,11 @@ export class VendasComponent implements OnInit {
   @ViewChild('chart')
   chart!: ChartComponent;
   public chartOptions!: Partial<ApexOptions>;
-  loading:boolean = true;
+  loading: boolean = true;
+  private readonly vendasService = inject(VendasService)
+  private readonly chartDataService = inject(ChartDataService)
+  private readonly router = inject(Router)
 
-  constructor(
-    private readonly vendasService: VendasService,
-    private readonly chartDataService: ChartDataService
-  ) {}
 
   ngOnInit(): void {
     this.getVendas();
@@ -63,5 +64,9 @@ export class VendasComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+  openCadastroVendas() {
+    this.router.navigate(['/home/cadastro-vendas']);
+
   }
 }

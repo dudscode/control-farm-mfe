@@ -1,0 +1,58 @@
+<section class="cadastro-produto">
+    <div class="cadastro-produto-header">
+        <h2>Cadastrar Produtos</h2>
+        <p>Preencha os dados para cadastrar um novo produto.</p>
+    </div>
+
+
+    <form [formGroup]="formGroupProduto">
+
+        <mat-form-field>
+            <mat-label>Quantidade produzida</mat-label>
+            <input matInput formControlName="quantidade" type="number" placeholder="0 " min="0">
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Nome do produto</mat-label>
+
+            <select matNativeControl formControlName="nome">
+                @for (product of produtos; track product) {
+                <option value="{{product.name}}">{{product.name}}</option>
+                }
+            </select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Safra</mat-label>
+            <input matInput formControlName="safra" type="text" >
+        </mat-form-field>
+         <mat-form-field>
+            <mat-label>Status</mat-label>
+
+            <select matNativeControl formControlName="status">
+                @for (status of statusOptions; track status) {
+                <option value="{{status}}">{{status}}</option>
+                }
+            </select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Endereço</mat-label>
+            <input matInput formControlName="localizacao" type="text" >
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <mat-label>Valor Unitário</mat-label>
+            <input matInput formControlName="preco" type="text" placeholder="R$ 0,00" mask="separator.2"
+                thousandSeparator="." decimalMarker="," prefix="R$ ">
+        </mat-form-field>
+
+    </form>
+    <div class="cadastro-produto-footer">
+        <button mat-flat-button [disabled]="disableButton()" (click)="setProduct()">
+            <mat-icon>edit</mat-icon>
+            Cadastrar</button>
+        
+
+    </div>
+
+</section>

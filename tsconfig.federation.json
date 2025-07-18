@@ -11,6 +11,9 @@
     "src/**/*.d.ts",
     "src/app/core/pages/metas/metas.component.ts",
     "src/app/core/pages/vendas/vendas.component.ts",
-    "src/app/core/pages/producao/producao.component.ts"
+    "src/app/core/pages/producao/producao.component.ts",
+    "src/app/core/pages/cadastro-vendas/cadastro-vendas.component.ts",
+    "src/app/core/pages/cadastro-metas/cadastro-metas.component.ts",
+    "src/app/core/pages/cadastro-produtos/cadastro-produtos.component.ts"
   ]
 }

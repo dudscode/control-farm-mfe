@@ -1,6 +1,14 @@
-h1{
-  font-weight: 700;
-  font-size: 32px;
-  opacity: 1;
-  color: #202224
+.titulo {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+
+  h1 {
+    font-weight: 700;
+    font-size: 32px;
+    opacity: 1;
+    color: #202224
+  }
+
+
 }

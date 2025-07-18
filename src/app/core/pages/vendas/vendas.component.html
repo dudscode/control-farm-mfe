@@ -1,7 +1,10 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-12 mt-3">
+    <div class="col-md-12 mt-3 titulo">
       <h1>Vendas</h1>
+      <button mat-flat-button (click)="openCadastroVendas()">
+        <mat-icon>add</mat-icon>
+        Cadastrar Venda</button>
     </div>
   </div>
   @if(!loading){
