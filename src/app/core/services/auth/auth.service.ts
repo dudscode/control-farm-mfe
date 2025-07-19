@@ -14,7 +14,7 @@ import {
   updateDoc,
   where
 } from '@angular/fire/firestore';
-import { IProduct, IProductName, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
+import { IMetas, IProduct, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -84,18 +84,112 @@ export class AuthService {
       catchError(error => throwError(() => new Error(`Erro ao salvar venda: ${error.message}`)))
     );
   }
+
   setProduct(data: IProduct): Observable<any> {
     const user = this.auth.currentUser;
     if (!user) {
       return throwError(() => new Error('Usuário não autenticado.'));
     }
     const productCollectionRef = collection(this.firestore, 'product');
-    const productDocRef = doc(productCollectionRef);
-    return from(setDoc(productDocRef, { ...data, uid: user.uid }, { merge: true })).pipe(
-      catchError(error => throwError(() => new Error(`Erro ao salvar produto: ${error.message}`)))
+  const productDocRef = doc(productCollectionRef); // gera ID automático
+  const productId = productDocRef.id;
+
+  const productDataWithId = {
+    ...data,
+    id_product: productId,
+    uid: user.uid
+  };
+
+  return from(setDoc(productDocRef, productDataWithId, { merge: true })).pipe(
+    catchError(error => throwError(() => new Error(`Erro ao salvar produto: ${error.message}`)))
+  );
+  }
+
+  setMetas(data: IMetas): Observable<any> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+    const metasCollectionRef = collection(this.firestore, 'goals');
+    const metasDocRef = doc(metasCollectionRef);
+    return from(setDoc(metasDocRef, { ...data, uid: user.uid }, { merge: true })).pipe(
+      catchError(error => throwError(() => new Error(`Erro ao salvar metas: ${error.message}`)))
+    );
+  }
+  updateMeta(data: any): Observable<any> {
+  const user = this.auth.currentUser;
+  if (!user) {
+    return throwError(() => new Error('Usuário não autenticado.'));
+  }
+
+  if (!data.id) {
+    return throwError(() => new Error('ID da meta não informado.'));
+  }
+
+  const metasDocRef = doc(this.firestore, 'goals', data.id);
+
+  return from(
+    setDoc(metasDocRef, { ...data, uid: user.uid }, { merge: true })
+  ).pipe(
+    catchError(error => throwError(() => new Error(`Erro ao salvar metas: ${error.message}`)))
+  );
+}
+
+
+  getVendasByUser(idProduct: string): Observable<any[]> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    const vendasCollection = collection(this.firestore, 'sales');
+    const q = query(
+      vendasCollection,
+      where('uid', '==', user.uid),
+      where('id_product', '==', idProduct)
+    );
+
+    return from(getDocs(q)).pipe(
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      catchError(err => throwError(() => new Error(`Erro ao buscar vendas: ${err.message}`)))
     );
   }
 
+  getMetasByUser(idProduct: string): Observable<any[]> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    const metasCollection = collection(this.firestore, 'goals');
+    const q = query(
+      metasCollection,
+      where('uid', '==', user.uid),
+      where('id_product', '==', idProduct)
+    );
+
+    return from(getDocs(q)).pipe(
+      map(snapshot => snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))),
+      catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
+    );
+  }
+  setNotification(data: any): Observable<any> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+    const notificationCollectionRef = collection(this.firestore, 'notification');
+    const notificationDocRef = doc(notificationCollectionRef);
+    const notificationId = notificationDocRef.id;
+    const notificationDataWithId = {
+      ...data,
+      id: notificationId,
+      uid: user.uid
+    };
+
+    return from(setDoc(notificationDocRef, notificationDataWithId, { merge: true })).pipe(
+      catchError(error => throwError(() => new Error(`Erro ao salvar notificação: ${error.message}`)))
+    );
+  }
 
 }
-
