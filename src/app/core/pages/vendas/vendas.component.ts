@@ -1,9 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  NgApexchartsModule,
-  ChartComponent,
-  ApexOptions,
-} from 'ng-apexcharts';
+import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +8,9 @@ import { AssetUrlPipe } from '../../../shared/pipes/asset-url.pipe';
 import { VendasService } from '../../services/vendas.service';
 import { DashboardCardData } from '../../domain/vendas/dashboard-card-data.interface';
 import { ChartDataService } from '../../services/chart-data.service';
-
+import { GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
+import { ProductData } from '../../domain/vendas/venda-response.interface';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-vendas',
@@ -23,6 +21,8 @@ import { ChartDataService } from '../../services/chart-data.service';
     NgApexchartsModule,
     DashboardCardComponent,
     AssetUrlPipe,
+    GenericTableComponent,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './vendas.component.html',
   styleUrl: './vendas.component.scss',
@@ -32,7 +32,8 @@ export class VendasComponent implements OnInit {
   @ViewChild('chart')
   chart!: ChartComponent;
   public chartOptions!: Partial<ApexOptions>;
-  loading:boolean = true;
+  loading: boolean = true;
+  products: ProductData[] = [];
 
   constructor(
     private readonly vendasService: VendasService,
@@ -48,8 +49,12 @@ export class VendasComponent implements OnInit {
       next: (response) => {
         this.dashboardCards = response.dashboardCardData;
         console.log(response);
-        this.chartOptions = this.chartDataService.mapDataToChartOptions(response.dashboardprofitData, "Lucro por produto");
-        this.loading = false
+        this.products = response.productsData;
+        this.chartOptions = this.chartDataService.mapDataToChartOptions(
+          response.dashboardprofitData,
+          'Lucro por produto'
+        );
+        this.loading = false;
       },
       error: (err) => {
         console.log(err);

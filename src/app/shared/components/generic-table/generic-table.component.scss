@@ -1,0 +1,58 @@
+:host {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; 
+
+  .mat-mdc-table {
+    background-color: transparent;
+    margin: 0 auto;
+  }
+
+  ::ng-deep table {
+    width: 100%;
+    min-width: 650px; 
+    max-width: 100%; 
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    td {
+      border-bottom: 1px solid #e0e0e0 !important; 
+    }
+
+    th,
+    td {
+      padding: 0.75rem;
+      font-size: 14px; 
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f1f4f9 !important;
+      color: #202224;
+      font-weight: 700;
+      border-bottom: none !important;
+
+      &:first-child {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+      &:last-child {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+    }
+    
+  }
+
+  @media (max-width: 768px) {
+    ::ng-deep td,
+    ::ng-deep th {
+      padding: 0.5rem;
+    }
+  }
+}
