@@ -7,8 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth/auth.service';
 import {MatSelectModule} from '@angular/material/select';
-import {  IProductName, IStatus, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
+import {  INotification, IProductName, IStatus, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
 import { NgxMaskDirective } from 'ngx-mask';
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-cadastro-vendas',
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
@@ -59,20 +60,74 @@ export class CadastroVendasComponent implements OnInit {
       amount: data.quantidade,
       date: new Date().toISOString(),
       price: this.formateToDecimal(data.preco),
+      id_product: existProducts.id,
       profit: this.formateToDecimal(data.quantidade) * this.formateToDecimal(data.preco) - this.formateToDecimal(existProducts.value) * this.formateToDecimal(data.quantidade),
       total_sale: this.formateToDecimal(data.quantidade) * this.formateToDecimal(data.preco)
     };
     console.log('Venda a ser cadastrada:', vendaCadastro);
     this.authService.setSales(vendaCadastro).subscribe(() => {
       this._snackBar.open('Venda cadastrada com sucesso!', 'Fechar', { duration: 3000 });
-      this.formGroupVendas.reset();
+      this.validaMeta();
     }, error => {
       this._snackBar.open(`Erro ao cadastrar venda: ${error.message}`, 'Fechar', { duration: 3000 });
     });
   }
+  validaMeta() {
+    const id_product = this.getProductSelect().id;
+    this.authService.getMetasByUser(id_product).subscribe((metas: any) => {
+      if (!metas || metas.length === 0) {
+        this.formGroupVendas.reset();
+        return;
+      }
+      const meta = metas[0];
+
+      this.atualizarMeta(meta);
+    }, (error: any) => {
+      this._snackBar.open(`Erro ao validar meta: ${error.message}`, 'Fechar', { duration: 3000 });
+    });
+  }
+  atualizarMeta(meta: any): void {
+    const id_product = this.getProductSelect().id_product;
+    let totalProfit = 0;
+    this.authService.getVendasByUser(id_product).subscribe((vendas: any) => {
+      if (!vendas || vendas.length === 0) {
+        this.formGroupVendas.reset();
+        return;
+      }
+      vendas.forEach((venda: IVendaCadastro) => {
+        totalProfit += venda.profit;
+      });
+      meta.current_profit = totalProfit;
+      meta.completed = totalProfit >= meta.desired_profit;
+      this.authService.updateMeta(meta).
+      pipe(
+        finalize(() => {
+          this.formGroupVendas.reset();
+        })
+      ).subscribe((_) => {
+        if (meta.completed) {
+          this.cadastrarNotificacao();
+          this._snackBar.open('Meta atingida!', 'Fechar', { duration: 3000 });
+        }
+      }, error => {
+        console.error('Erro ao atualizar meta:', error);
+      });
+    });
+  }
+  cadastrarNotificacao(){
+    const name_product = this.getProductSelect().name;
+    const notification: INotification = {
+      message: ` Você atingiu a meta para o produto ${name_product}`,
+      read: false,
+      title: 'Meta atingida'
+    };
+    this.authService.setNotification(notification).subscribe();
+  }
+
   getProductSelect(){
     return this.produtos.find(p => p.id === this.formGroupVendas.value.produto) || '';
   }
+
   formateToDecimal(value: any): number {
     if (typeof value === 'string') {
       value = parseFloat(value.replace('R$', '').replace('.', '').replace(',', '.'));
