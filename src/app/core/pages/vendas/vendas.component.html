@@ -1,6 +1,6 @@
 <div class="dashboard-container">
   <div class="header">
-    <h1>Vendas</h1>
+    <h1>Dashboard</h1>
   </div>
 
   @if (!loading) {
@@ -9,7 +9,7 @@
     <div class="cards">
       @for(card of dashboardCards; track card) {
       <app-dashboard-card
-        [icon]="card.icon | assetUrl"
+        [icon]="(card.icon ?? '') | assetUrl"
         [cardMetric]="card.cardMetric"
         [efficiencyPercentage]="card.efficiencyPercentage"
         [label]="card.label"

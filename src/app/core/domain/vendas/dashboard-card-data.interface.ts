@@ -1,5 +1,5 @@
 export interface DashboardCardData {
-  icon: string;
+  icon?: string;
   cardMetric: number;
   efficiencyPercentage: number;
   label: string;

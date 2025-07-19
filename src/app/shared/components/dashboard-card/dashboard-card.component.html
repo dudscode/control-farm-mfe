@@ -9,7 +9,9 @@
       </h5>
     </div>
     <div class="dashboard-card__image-container">
-      <img [src]="icon" alt="Icon" class="dashboard-card__icon-img" />
+      @if(icon){
+        <img [src]="icon" alt="Icon" class="dashboard-card__icon-img" />
+      }
     </div>
   </div>
 
