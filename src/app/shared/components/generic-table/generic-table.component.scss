@@ -1,55 +1,95 @@
 :host {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    overflow-x: auto; 
+  width: 100%;
+  justify-content: center;
+  overflow-x: auto;
 
   .mat-mdc-table {
     background-color: transparent;
     margin: 0 auto;
   }
 
-  ::ng-deep table {
-    width: 100%;
-    min-width: 650px; 
-    max-width: 100%; 
-    table-layout: fixed;
-    border-collapse: collapse;
+  .filter-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0.5rem;
+  }
 
-    td {
-      border-bottom: 1px solid #e0e0e0 !important; 
+  ::ng-deep {
+    table {
+      width: 100%;
+      min-width: 650px;
+      max-width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin-top: 1rem !important;
+
+      td {
+        border-bottom: 1px solid #e0e0e0 !important;
+      }
+
+      th,
+      td {
+        padding: 0.75rem;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+      }
+
+      th {
+        background-color: #f1f4f9 !important;
+        color: #202224;
+        font-weight: 700;
+        border-bottom: none !important;
+
+        &:first-child {
+          border-top-left-radius: 12px;
+          border-bottom-left-radius: 12px;
+        }
+
+        &:last-child {
+          border-top-right-radius: 12px;
+          border-bottom-right-radius: 12px;
+        }
+      }
     }
 
-    th,
-    td {
-      padding: 0.75rem;
-      font-size: 14px; 
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .mat-sort-header-content {
       text-align: center;
+      justify-content: center;
+      flex: 0 0 auto;
     }
 
-    th {
-      background-color: #f1f4f9 !important;
-      color: #202224;
-      font-weight: 700;
-      border-bottom: none !important;
+    .mat-sort-header-container {
+      display: flex;
+      justify-content: center;
+    }
 
-      &:first-child {
-        border-top-left-radius: 12px;
-        border-bottom-left-radius: 12px;
+    .mat-sort-header-arrow {
+      margin: 0 0 0 6px;
+    }
+
+    .mat-mdc-paginator {
+      background-color: transparent !important;
+      border-top: none;
+
+      .mat-mdc-paginator-container {
+        min-height: 48px;
+        padding: 0 8px;
+        justify-content: flex-end;
       }
-      &:last-child {
-        border-top-right-radius: 12px;
-        border-bottom-right-radius: 12px;
+
+      // Optional: Style the page size selector
+      .mat-mdc-paginator-page-size {
+        align-items: center;
       }
     }
-    
   }
 
   @media (max-width: 768px) {
+
     ::ng-deep td,
     ::ng-deep th {
       padding: 0.5rem;

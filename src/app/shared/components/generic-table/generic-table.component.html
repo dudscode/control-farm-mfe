@@ -1,8 +1,20 @@
-<table mat-table [dataSource]="data" class="mat-elevation-z1">
-  <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
-    <th mat-header-cell *matHeaderCellDef>{{ getColumnLabel(col) }}</th>
-    <td mat-cell *matCellDef="let element">
+<div class="filter-container"  *ngIf="showFilters">
+  <mat-form-field appearance="outline">
+    <mat-label>Filtrar por mês</mat-label>
+    <mat-select [(value)]="selectedMonth" (selectionChange)="applyMonthFilter()">
+      <mat-option [value]="''">Todos os meses</mat-option>
+      <mat-option *ngFor="let month of availableMonths" [value]="month.value">
+        {{ month.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z1" matSort>
+  <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ getColumnLabel(col) }}</th>
+    <td mat-cell *matCellDef="let element">
     <ng-container [ngSwitch]="getColumnFormat(col)">
           <span *ngSwitchCase="'date'">{{ element[col] | date:'dd/MM/yyyy HH:mm' }}</span>
           
@@ -17,4 +29,16 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+      Não há registros para a consulta selecionada
+    </td>
+  </tr>
 </table>
+
+<mat-paginator 
+  [pageSizeOptions]="[5, 10, 20]"
+  [pageSize]="10"
+  showFirstLastButtons
+  aria-label="Select page">
+</mat-paginator>

@@ -22,6 +22,7 @@ module.exports = withNativeFederation({
   '@angular/material/input': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   '@angular/material/button': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   '@angular/material/progress-spinner': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/select ': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   '@angular/forms': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   },
 
