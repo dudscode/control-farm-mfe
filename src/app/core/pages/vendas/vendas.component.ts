@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { NgApexchartsModule, ChartComponent, ApexOptions } from 'ng-apexcharts';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,8 @@ import { ChartDataService } from '../../services/chart-data.service';
 import { GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
 import { ProductData } from '../../domain/vendas/venda-response.interface';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-vendas',
@@ -23,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AssetUrlPipe,
     GenericTableComponent,
     MatProgressSpinnerModule,
+    MatButtonModule,
   ],
   templateUrl: './vendas.component.html',
   styleUrl: './vendas.component.scss',
@@ -34,11 +37,9 @@ export class VendasComponent implements OnInit {
   public chartOptions!: Partial<ApexOptions>;
   loading: boolean = true;
   products: ProductData[] = [];
-
-  constructor(
-    private readonly vendasService: VendasService,
-    private readonly chartDataService: ChartDataService
-  ) {}
+  private readonly vendasService = inject(VendasService);
+  private readonly chartDataService = inject(ChartDataService);
+  private readonly router = inject(Router);
 
   ngOnInit(): void {
     this.getVendas();
@@ -60,5 +61,9 @@ export class VendasComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  openCadastroVendas() {
+    this.router.navigate(['/home/cadastro-vendas']);
   }
 }

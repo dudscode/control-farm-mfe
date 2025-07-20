@@ -1,0 +1,34 @@
+<section class="cadastro-metas">
+    <div class="cadastro-metas-header mt-5">
+        <h2>Cadastrar Metas</h2>
+        <p>Preencha os dados para cadastrar uma nova meta.</p>
+    </div>
+
+
+    <form [formGroup]="formGroupMetas">
+
+         <mat-form-field>
+            <mat-label>Produto - Safra</mat-label>
+
+            <select matNativeControl formControlName="produto">
+                @for (product of produtos; track product) {
+                <option value="{{product.id}}">{{product.name + ' - ' + product.harvest}}</option>
+                }
+            </select>
+        </mat-form-field>
+
+
+        <mat-form-field>
+            <mat-label>Lucro desejado</mat-label>
+            <input matInput formControlName="lucroDesejado" type="text" placeholder="R$ 0,00" mask="separator.2"
+                thousandSeparator="." decimalMarker="," prefix="R$ ">
+        </mat-form-field>
+
+    </form>
+    <div class="cadastro-metas-footer mt-8">
+        <button mat-flat-button  [disabled]="disableButton()" (click)="cadastrarMeta()">
+            <mat-icon>add</mat-icon>
+            Cadastrar</button>
+    </div>
+
+</section>

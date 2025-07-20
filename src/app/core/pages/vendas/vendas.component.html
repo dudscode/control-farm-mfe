@@ -1,15 +1,19 @@
 <div class="dashboard-container">
   <div class="header">
     <h1>Dashboard</h1>
+
+    <button mat-flat-button (click)="openCadastroVendas()">
+      <mat-icon>add</mat-icon>
+      Cadastrar Venda
+    </button>
   </div>
 
   @if (!loading) {
-
   <div class="dashboard-content">
     <div class="cards">
       @for(card of dashboardCards; track card) {
       <app-dashboard-card
-        [icon]="(card.icon ?? '') | assetUrl"
+        [icon]="card.icon ?? '' | assetUrl"
         [cardMetric]="card.cardMetric"
         [efficiencyPercentage]="card.efficiencyPercentage"
         [label]="card.label"
@@ -45,9 +49,9 @@
           [columns]="{
             productName: 'Produto',
             locationLotes: 'Localização',
-    dateTime: { label: 'Data', format: 'date' },
-    piece: { label: 'Quantidade', format: 'number' },
-    lucros: { label: 'Lucros', format: 'currency' }
+            dateTime: { label: 'Data', format: 'date' },
+            piece: { label: 'Quantidade', format: 'number' },
+            lucros: { label: 'Lucros', format: 'currency' }
           }"
         >
         </app-generic-table>
@@ -56,12 +60,8 @@
     </mat-card>
   </div>
 
-
-
-
-
   }
   <div *ngIf="loading" class="loading">
     <mat-spinner></mat-spinner>
-</div>
+  </div>
 </div>
