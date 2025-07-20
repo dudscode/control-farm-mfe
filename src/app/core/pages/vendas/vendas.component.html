@@ -1,20 +1,19 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 mt-3 titulo">
-      <h1>Vendas</h1>
-      <button mat-flat-button (click)="openCadastroVendas()">
-        <mat-icon>add</mat-icon>
-        Cadastrar Venda</button>
-    </div>
+<div class="dashboard-container">
+  <div class="header">
+    <h1>Dashboard</h1>
+
+    <button mat-flat-button (click)="openCadastroVendas()">
+      <mat-icon>add</mat-icon>
+      Cadastrar Venda
+    </button>
   </div>
-  @if(!loading){
 
-  <div class="row">
-    <div class="col-12 col-md-3 order-1 order-md-2">
-      @for(card of dashboardCards; track card){
-
+  @if (!loading) {
+  <div class="dashboard-content">
+    <div class="cards">
+      @for(card of dashboardCards; track card) {
       <app-dashboard-card
-        [icon]="card.icon | assetUrl"
+        [icon]="card.icon ?? '' | assetUrl"
         [cardMetric]="card.cardMetric"
         [efficiencyPercentage]="card.efficiencyPercentage"
         [label]="card.label"
@@ -24,8 +23,8 @@
       }
     </div>
 
-    <div class="col-12 col-md-9 mt-3 order-2 order-md-2">
-      <mat-card class="pt-3 ps-1 pe-3">
+    <div class="chart">
+      <mat-card class="chart-card">
         <apx-chart
           [series]="chartOptions.series || []"
           [chart]="chartOptions.chart!"
@@ -37,12 +36,32 @@
       </mat-card>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12">
-      <mat-card>Produtos
 
-      </mat-card>
-    </div>
+  <div class="products">
+    <mat-card class="products__card">
+      <div class="products__header">
+        <h2>Produtos</h2>
+      </div>
+      @if(!!products){
+      <div class="products__content">
+        <app-generic-table
+          [data]="products"
+          [columns]="{
+            productName: 'Produto',
+            locationLotes: 'Localização',
+            dateTime: { label: 'Data', format: 'date' },
+            piece: { label: 'Quantidade', format: 'number' },
+            lucros: { label: 'Lucros', format: 'currency' }
+          }"
+        >
+        </app-generic-table>
+      </div>
+      }
+    </mat-card>
   </div>
+
   }
+  <div *ngIf="loading" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
 </div>
