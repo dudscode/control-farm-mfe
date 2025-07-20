@@ -134,7 +134,7 @@ export class AuthService {
       return throwError(() => new Error('Usuário não autenticado.'));
     }
     const productCollectionRef = collection(this.firestore, 'product');
-  const productDocRef = doc(productCollectionRef); // gera ID automático
+  const productDocRef = doc(productCollectionRef); 
   const productId = productDocRef.id;
 
   const productDataWithId = {
@@ -147,6 +147,30 @@ export class AuthService {
     catchError(error => throwError(() => new Error(`Erro ao salvar produto: ${error.message}`)))
   );
   }
+  updateProduct(data: IProduct): Observable<any> {
+  const user = this.auth.currentUser;
+  if (!user) {
+    return throwError(() => new Error('Usuário não autenticado.'));
+  }
+
+  if (!data.id_product) {
+    return throwError(() => new Error('ID do produto é obrigatório para atualizar.'));
+  }
+
+  const productDocRef = doc(this.firestore, 'product', data.id_product);
+
+  const updateData = {
+    saled: data.saled,
+    amount_available: data.amount_available
+  };
+
+  return from(updateDoc(productDocRef, updateData)).pipe(
+    catchError(error =>
+      throwError(() => new Error(`Erro ao atualizar produto: ${error.message}`))
+    )
+  );
+}
+
 
   setMetas(data: IMetas): Observable<any> {
     const user = this.auth.currentUser;
