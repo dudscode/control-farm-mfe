@@ -50,7 +50,7 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/control-farm-mfe/browser/ s3://${{ secrets.S3_BUCKET }} --delete
+          aws s3 sync dist/control-farm-mfe/browser/ s3://${{ secrets.S3_BUCKET }}/bundle/ --delete
 
       - name: Invalidate CloudFront cache
         run: |
