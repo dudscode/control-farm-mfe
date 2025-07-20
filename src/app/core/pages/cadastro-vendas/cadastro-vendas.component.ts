@@ -64,7 +64,6 @@ export class CadastroVendasComponent implements OnInit {
       profit: this.formateToDecimal(data.quantidade) * this.formateToDecimal(data.preco) - this.formateToDecimal(existProducts.value) * this.formateToDecimal(data.quantidade),
       total_sale: this.formateToDecimal(data.quantidade) * this.formateToDecimal(data.preco)
     };
-    console.log('Venda a ser cadastrada:', vendaCadastro);
     this.authService.setSales(vendaCadastro).subscribe(() => {
       this._snackBar.open('Venda cadastrada com sucesso!', 'Fechar', { duration: 3000 });
       this.validaMeta();

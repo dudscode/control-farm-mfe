@@ -65,7 +65,6 @@ export class CadastroProdutosComponent implements OnInit {
       value: newProduct.preco,
       status: newProduct.status
     };
-    console.log('Produto a ser cadastrado:', product);
 
     this.authService.setProduct(product).subscribe(() => {
       this._snackBar.open('Produto cadastrado com sucesso!', 'Fechar', { duration: 3000 });

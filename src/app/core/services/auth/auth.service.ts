@@ -59,6 +59,49 @@ export class AuthService {
       )
     );
   }
+  getProductAndVendas(): Observable<any[]> {
+  const user = this.auth.currentUser;
+  if (!user) {
+    return throwError(() => new Error('Usuário não autenticado.'));
+  }
+
+  const productsQuery = query(
+    collection(this.firestore, 'product'),
+    where('uid', '==', user.uid)
+  );
+
+  return from(getDocs(productsQuery)).pipe(
+    switchMap(snapshot => {
+      const produtos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+
+      if (produtos.length === 0) {
+        return of([]); 
+      }
+
+      const produtosComVendas$ = produtos.map(produto => {
+        const vendasQuery = query(
+          collection(this.firestore, 'sales'),
+          where('uid', '==', user.uid),
+          where('id_product', '==', produto.id)
+        );
+
+        return from(getDocs(vendasQuery)).pipe(
+          map(vendasSnap => {
+            const vendas = vendasSnap.docs.map(v => ({ id: v.id, ...v.data() }));
+            return {
+              ...produto,
+              vendas
+            };
+          })
+        );
+      });
+
+      return combineLatest(produtosComVendas$); // Espera todas as vendas serem carregadas
+    }),
+    catchError(err => throwError(() => new Error(`Erro ao buscar produtos: ${err.message}`)))
+  );
+}
+
   getProductNames(): Observable<any[]> {
     const user = this.auth.currentUser;
     if (!user) {
@@ -173,6 +216,7 @@ export class AuthService {
       catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
     );
   }
+
   getMetas(): Observable<any[]> {
   const user = this.auth.currentUser;
   if (!user) {

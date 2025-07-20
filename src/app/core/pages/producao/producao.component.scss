@@ -4,7 +4,7 @@
   flex-direction: column;
   gap: 1.5rem;
   margin: 0 auto;
-  width: 100%;
+  width:97%;
   max-width: 1140px;
   user-select: none;
 
@@ -108,5 +108,10 @@
     &__content {
       padding: 0 1rem 1rem;
     }
+  }
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

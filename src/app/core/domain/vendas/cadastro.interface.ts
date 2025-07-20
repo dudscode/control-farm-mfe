@@ -18,6 +18,7 @@ export interface IProduct {
   name: string;
   value: number;
   status: IStatus;
+  profit?: number;
 }
 export type IStatus = 'Aguardando' | 'Em produção' | 'Já colhido';
 
