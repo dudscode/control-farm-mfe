@@ -35,7 +35,7 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}'
               },
-              assetsBaseUrl:'https://d3fattc0qhjhmh.cloudfront.net/bundle/'
+              assetsBaseUrl:'https://d3fattc0qhjhmh.cloudfront.net/bundle'
           };" > src/environments/environment.ts
 
       - name: Build Angular MFE
