@@ -17,7 +17,16 @@ module.exports = withNativeFederation({
   shared: {
     ...shareAll({ singleton: true, strictVersion: true, requiredVersion: 'auto' }),
   '@angular/material': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-  '@angular/material/icon': { singleton: true, strictVersion: true, requiredVersion: 'auto' }
+  '@angular/material/icon': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/table': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/paginator': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/sort': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/form-field': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/input': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/button': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/progress-spinner': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/material/select ': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  '@angular/forms': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
   },
 
   skip: [

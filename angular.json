@@ -61,7 +61,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/themes/custom-theme.scss", "src/styles.scss"],
+            "styles": ["src/themes/custom-theme.scss"],
             "scripts": []
           }
         },
@@ -80,7 +80,7 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/themes/custom-theme.scss", "src/styles.scss"],
+            "styles": ["src/themes/custom-theme.scss"],
             "scripts": []
           },
           "configurations": {

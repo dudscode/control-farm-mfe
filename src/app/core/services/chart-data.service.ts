@@ -13,25 +13,25 @@ export class ChartDataService {
     titulo: string = 'Gráfico de Vendas'
   ): Partial<ApexOptions> {
     const todosMeses: { mes: number; nome: string }[] = [];
-    data.forEach(item => {
-      item.vendasPorMes.forEach(venda => {
-        if (!todosMeses.some(m => m.mes === venda.mes)) {
+    data.forEach((item) => {
+      item.vendasPorMes.forEach((venda) => {
+        if (!todosMeses.some((m) => m.mes === venda.mes)) {
           todosMeses.push({ mes: venda.mes, nome: venda.nome });
         }
       });
     });
     todosMeses.sort((a, b) => a.mes - b.mes);
 
-    const categorias = todosMeses.map(m => m.mes.toString());
+    const categorias = todosMeses.map((m) => m.mes.toString());
 
-    const series: ApexAxisChartSeries = data.map(item => {
+    const series: ApexAxisChartSeries = data.map((item) => {
       const valores = todosMeses.map(({ mes }) => {
-        const v = item.vendasPorMes.find(x => x.mes === mes);
+        const v = item.vendasPorMes.find((x) => x.mes === mes);
         return v ? v.valor : 0;
       });
       return {
         name: item.produto,
-        data: valores
+        data: valores,
       };
     });
 
@@ -41,63 +41,65 @@ export class ChartDataService {
         type: 'bar',
         height: 350,
         toolbar: {
-          show: false
-        }
+          show: false,
+        },
       },
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: '55%',
-          borderRadius: 5,
-          borderRadiusApplication: 'end'
-        }
+          columnWidth: '35%',
+          borderRadius: 7,
+          borderRadiusApplication: 'end',
+          distributed: false, // Mantém agrupado por série
+          rangeBarOverlap: true, // Evita sobreposição
+          rangeBarGroupRows: false,
+        },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         show: true,
         width: 2,
         colors: ['transparent'],
-        curve: 'smooth'
+        curve: 'smooth',
       },
       title: {
         text: titulo,
         align: 'left',
         style: {
           fontSize: '18px',
-          fontWeight: 'bold'
-        }
+          fontWeight: 'bold',
+        },
       },
       xaxis: {
         categories: categorias,
         labels: {
           formatter: (value: string) => {
             const numero = Number(value);
-            const mes = todosMeses.find(m => m.mes === numero);
+            const mes = todosMeses.find((m) => m.mes === numero);
             return mes?.nome ?? value;
-          }
+          },
         },
         title: {
-          text: 'Produtos'
-        }
+          text: 'Produtos',
+        },
       },
       yaxis: {
         title: {
-          text: 'R$ (milhares)'
-        }
+          text: 'R$ (milhares)',
+        },
       },
       fill: {
-        opacity: 1
+        opacity: 1,
       },
       tooltip: {
         y: {
-
-          formatter: function(val) {
-            return "R$ " + val + " mil";
-          }
-        }
-      }
+          formatter: function (val) {
+            return 'R$ ' + val + ' mil';
+          },
+        },
+      },
     };
 
     return chartOptions;
