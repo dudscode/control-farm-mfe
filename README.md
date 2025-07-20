@@ -1,59 +1,81 @@
-# ControlFarmMfe
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.1.
+# Control Farm MFE
 
-## Development server
+![Angular](https://img.shields.io/badge/Angular-19.2.0-DD0031) ![Angular Material](https://img.shields.io/badge/Material%20UI-19.2.18-1976D2) ![Firebase](https://img.shields.io/badge/Firebase-11.10.0-FFCA28) ![Node](https://img.shields.io/badge/Node-18.x-417E38)
 
-To start a local development server, run:
+## Descrição
 
-```bash
-ng serve
+O **Control Farm MFE** é um microfrontend Angular desenvolvido como projeto de hackathon final da pós-graduação em Engenharia de Frontend da FIAP. Ele faz parte do ecossistema da aplicação principal [control-farm-web](https://github.com/dudscode/control-farm-web/tree/main) e utiliza **Module Federation** para expor componentes e funcionalidades de forma dinâmica.
+
+## Como funciona
+
+Este microfrontend expõe seus módulos e componentes através de um arquivo `remoteEntry.js` gerado pela configuração do plugin `@angular-architects/native-federation`. A aplicação host (`control-farm-web`) consome esses remotes em tempo de execução, permitindo atualizações independentes e deploys desacoplados.
+
+## Requisitos
+
+- **Node.js** (versão 18 ou superior)  
+- **Angular CLI** (versão 19 ou superior):  
+
+## Configuração do Environment
+
+Crie um arquivo `src/environments/environment.prod.ts` (e, se necessário, `environment.ts`) com o seguinte conteúdo, substituindo as chaves pelos seus secrets do CI/CD:
+
+```typescript
+export const environment = {
+  production: true,
+  assetsBaseUrl: 'http://localhost:4202'
+  firebase: {
+    apiKey:  'your-api-key',
+    authDomain:  'your-auth-domain',
+    projectId:  'your-project-id',
+    storageBucket:  'your-storage-bucket',
+    messagingSenderId:  'your-messaging-sender-id',
+    appId:  'your-app-id'
+  },
+};
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4202/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Instalação & Execução
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. **Instale as dependências**  
 
 ```bash
-ng generate component component-name
-```
+   npm install
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. **Rode em modo de desenvolvimento**  
 
-```bash
-ng generate --help
-```
+   ```bash
+   npm start
+   ```
 
-## Building
+   Acesse em `http://localhost:4202`.
 
-To build the project run:
+## Scripts Disponíveis
 
-```bash
-ng build
-```
+| Comando         | Descrição                                         |
+| ----------------| --------------------------------------------------|
+| `npm start`     | Inicia o servidor de desenvolvimento (ng serve)   |
+| `npm run build` | Gera build de produção                            |
+| `npm run watch` | Build em modo watch (configuração de development) |
+| `npm test`      | Executa testes unitários (Karma + Jasmine)        |
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Tecnologias & Bibliotecas
 
-## Running unit tests
+- [**Angular**](https://angular.dev/installation) (19.2): Framework javascript
+- [**Angular Material**](https://v19.material.angular.dev/) (19.2.18): Biblioteca de componentes
+- [**Rxjs**](https://rxjs.dev/): Gerenciamento de estados e reatividade
+- [**ApexCharts + ng‑apexcharts**](https://apexcharts.com/): Graficos responsivos  
+- [**Firebase**](https://firebase.google.com/) (11.4.0): Autenticação e banco de dados em tempo real.
+- **Native‑federation**: Module federation e carregamento de microfrontends
+- **Github Action**: CI CD
+- **Amazon S3 e Cloudfront** para hospedagem do projeto e cache
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Equipe
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Desenvolvido como projeto de conclusão da pós em Engenharia de Frontend – FIAP  
+-Eduarda Alves
+-Fernanda Kuhn
+-Lucas Coutinho
+-Lucas Rocha
+-Monique Azevedo
