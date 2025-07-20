@@ -50,8 +50,8 @@ export class ChartDataService {
           columnWidth: '35%',
           borderRadius: 7,
           borderRadiusApplication: 'end',
-          distributed: false, // Mantém agrupado por série
-          rangeBarOverlap: true, // Evita sobreposição
+          distributed: false,
+          rangeBarOverlap: true,
           rangeBarGroupRows: false,
         },
       },

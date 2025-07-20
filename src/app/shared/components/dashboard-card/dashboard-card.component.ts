@@ -16,6 +16,7 @@ export class DashboardCardComponent {
   @Input({ required: true }) label!: string;
   @Input() isCurrency: boolean = false;
   @Input() isPositive?: boolean = true;
+  @Input() showFooter ?: boolean = true;
   
   trendIcon(): string {
     return this.isPositive ? 'trending_up' : 'trending_down';

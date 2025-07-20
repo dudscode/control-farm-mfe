@@ -7,33 +7,33 @@
       Cadastrar Produto
     </button>
   </div>
+  @if (!loading && showErro) {
+    <div class="error-message">
+      <p>Erro ao carregar os dados. Tente novamente mais tarde.</p>
+    </div>
+  }
+  @if (!loading && showSemProdutos) {
+    <div class="no-products-message">
+      <p>Nenhum produto encontrado.</p>
+    </div>
+  }
 
-  @if (!loading) {
+  @if (!loading && !showSemProdutos && dashboardCards.length && allProducts.length) {
 
   <div class="dashboard-content">
     <div class="cards">
       @for(card of dashboardCards; track card) {
-      <app-dashboard-card
-        [icon]="card.icon ? (card.icon | assetUrl) : ''"
-        [cardMetric]="card.cardMetric"
-        [efficiencyPercentage]="card.efficiencyPercentage"
-        [label]="card.label"
-        [isCurrency]="card.isCurrency"
-        [isPositive]="card.isPositive"
-      ></app-dashboard-card>
+      <app-dashboard-card [icon]="card.icon ? (card.icon | assetUrl) : ''" [cardMetric]="card.cardMetric"
+        [efficiencyPercentage]="card.efficiencyPercentage" [label]="card.label" [isCurrency]="card.isCurrency"
+        [showFooter]="false"></app-dashboard-card>
       }
     </div>
 
     <div class="chart">
       <mat-card class="chart-card">
-        <apx-chart
-          [series]="chartOptions.series || []"
-          [chart]="chartOptions.chart!"
-          [xaxis]="chartOptions.xaxis!"
-          [dataLabels]="chartOptions.dataLabels || {}"
-          [plotOptions]="chartOptions.plotOptions!"
-          [title]="chartOptions.title!"
-        ></apx-chart>
+        <apx-chart [series]="chartOptions.series || []" [chart]="chartOptions.chart!" [xaxis]="chartOptions.xaxis!"
+          [dataLabels]="chartOptions.dataLabels || {}" [plotOptions]="chartOptions.plotOptions!"
+          [title]="chartOptions.title!"></apx-chart>
       </mat-card>
     </div>
   </div>
@@ -43,18 +43,18 @@
       <div class="products__header">
         <h2>Produtos</h2>
       </div>
-      @if(!!products){
+      @if(!!allProducts){
       <div class="products__content">
-        <app-generic-table
-          [data]="products"
-          [columns]="{
-            productName: 'Produto',
-            locationLotes: 'Localização',
-            dateTime: { label: 'Data', format: 'date' },
-            piece: { label: 'Quantidade', format: 'number' },
-            lucros: { label: 'Lucros', format: 'currency' }
-          }"
-        >
+        <app-generic-table [data]="allProducts" [columns]="{
+            nameHarvest: 'Produto - Safra',
+            location: 'Localização',
+            date: {
+              label: 'Data',
+              format: 'date'
+            },
+            amount: { label: 'Quantidade', format: 'number' },
+            profit: { label: 'Lucros', format: 'currency' }
+          }">
         </app-generic-table>
       </div>
       }
@@ -62,7 +62,10 @@
   </div>
 
   }
-  <div *ngIf="loading" class="loading">
+  @if(loading){
+  <div class="loading">
     <mat-spinner></mat-spinner>
   </div>
+
+  }
 </div>

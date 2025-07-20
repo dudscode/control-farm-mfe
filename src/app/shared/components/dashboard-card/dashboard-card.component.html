@@ -14,8 +14,8 @@
       }
     </div>
   </div>
-
-  <div class="dashboard-card__footer">
+  @if(showFooter) {
+     <div class="dashboard-card__footer" >
     <span
       class="dashboard-card__value"
       [class.dashboard-card__value--positive]="isPositive"
@@ -28,4 +28,7 @@
     </span>
     {{ (isPositive ? "up" : "down") | titlecase }} from past week
   </div>
+  }
+
+ 
 </mat-card>
