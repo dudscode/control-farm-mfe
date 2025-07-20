@@ -25,6 +25,11 @@
   }
 
   .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+
     h1 {
       margin: 0;
       margin-top: 1rem;
@@ -32,6 +37,13 @@
       font-size: 32px;
       opacity: 1;
       color: #202224;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      margin-top: 2rem;
+      gap: 8px;
     }
   }
 

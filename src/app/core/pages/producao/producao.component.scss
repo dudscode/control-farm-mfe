@@ -25,6 +25,11 @@
   }
 
   .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+
     h1 {
       margin: 0;
       margin-top: 1rem;
@@ -33,38 +38,45 @@
       opacity: 1;
       color: #202224;
     }
+
+    button {
+      display: flex;
+      align-items: center;
+      margin-top: 2rem;
+      gap: 8px;
+    }
   }
 
   .dashboard-content {
     display: flex;
-    flex-direction: column; // Changed from column-reverse
+    flex-direction: column;
     gap: 1.5rem;
 
     @media (min-width: 768px) {
-      flex-direction: column; // Changed from row - always keep cards on top
+      flex-direction: column;
 
     }
 
     .cards {
       display: flex;
-      flex-direction: row; // Changed from column - cards in a row
+      flex-direction: row;
       flex-wrap: wrap;
       gap: 1rem;
       flex: 1;
       width: 100%;
     }
 
-       app-dashboard-card {
-        flex: 1 1 100%; // Two cards per row on smaller screens
-        min-width: 200px;
-        
-        @media (min-width: 992px) {
+    app-dashboard-card {
+      flex: 1 1 100%;
+      min-width: 200px;
+
+      @media (min-width: 992px) {
         flex: 0 0 calc(25% - 0.75rem);
-        }
       }
+    }
 
     .chart {
-        flex: 1;
+      flex: 1;
       width: 100%;
       min-width: 0;
       display: flex;
