@@ -95,4 +95,17 @@
       padding: 0.5rem;
     }
   }
+
+  .status-in-progress {
+    border-radius: 13.5px;
+    background: #FCBE2D;
+    padding: 0.3rem;
+  }
+  
+  .status-completed {
+    border-radius: 13.5px;
+    background: #00B69B;
+    padding: 0.3rem;
+  }
+
 }

@@ -1,4 +1,51 @@
-<p>metas works!</p>
- <button mat-flat-button (click)="openCadastroMetas()">
-        <mat-icon>add</mat-icon>
-        Cadastrar Meta</button>
+<section class="dashboard-container">
+
+      
+       <div class="header">
+              <button mat-flat-button (click)="openCadastroMetas()">
+                     <mat-icon>add</mat-icon>
+                     Cadastrar Meta
+              </button>
+       </div>
+       @if(showSpinner) {
+              
+              <div class="loading">
+                    <mat-spinner></mat-spinner>
+      
+             </div>
+       }
+
+       @if(!showSpinner && metas.length === 0 && !showError) {
+              <div class="empty-state">
+                     <p>Nenhuma meta cadastrada</p>
+              </div>
+       }
+       @if(!showSpinner && showError) {
+              <div class="empty-state">
+                     <p>Erro ao carregar metas</p>
+              </div>
+       }
+       @if(!showSpinner && metas.length && !showError ) {
+              <mat-card>
+              <section class="metas">
+                     <div class="metas__header">
+                     <h1>Metas</h1>
+              </div>
+              <div class="products__content">
+                     <app-generic-table [showFilters]="false" [data]="metas" [columns]="{
+            productName: 'Produto-Safra',
+            localLote: 'Localização',
+            lucroAtual: { label: 'Lucro Atual', format: 'currency' },
+            metaLucro: { label: 'Meta de Lucro', format: 'currency' },
+            metaPercentual: { label: 'Meta Percentual', format: 'percent' },
+            status: { label: 'Status', format: 'status' }
+          }">
+                     </app-generic-table>
+              </div>
+              </section>
+              
+       </mat-card>
+       }
+       
+
+</section>
