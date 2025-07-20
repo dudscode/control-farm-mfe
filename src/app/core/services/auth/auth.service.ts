@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Auth, authState, User } from '@angular/fire/auth';
-import { catchError, from, map, Observable, switchMap, throwError } from 'rxjs';
+import { catchError, combineLatest, from, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 
 import {
@@ -173,6 +173,43 @@ export class AuthService {
       catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
     );
   }
+  getMetas(): Observable<any[]> {
+  const user = this.auth.currentUser;
+  if (!user) {
+    return throwError(() => new Error('Usuário não autenticado.'));
+  }
+
+  const metasCollection = collection(this.firestore, 'goals');
+  const q = query(metasCollection, where('uid', '==', user.uid));
+
+  return from(getDocs(q)).pipe(
+    switchMap(snapshot => {
+      const metas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+
+      if (metas.length === 0) {
+        return of([]); // Nenhuma meta
+      }
+
+      const metasComProdutos$ = metas.map(meta => {
+        const produtoRef = doc(this.firestore, 'product', meta.id_product);
+        return from(getDoc(produtoRef)).pipe(
+          map(produtoSnap => {
+            const produtoData = produtoSnap.exists() ? produtoSnap.data() : null;
+            return {
+              ...meta,
+              produto: produtoData
+            };
+          })
+        );
+      });
+
+      return combineLatest(metasComProdutos$); // Espera todos os produtos serem carregados
+    }),
+    catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
+  );
+}
+
+
   setNotification(data: any): Observable<any> {
     const user = this.auth.currentUser;
     if (!user) {

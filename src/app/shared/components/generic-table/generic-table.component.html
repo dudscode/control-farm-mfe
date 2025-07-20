@@ -19,9 +19,9 @@
           <span *ngSwitchCase="'date'">{{ element[col] | date:'dd/MM/yyyy HH:mm' }}</span>
           
           <span *ngSwitchCase="'currency'" class="price">{{ element[col] | currency:'BRL':'symbol':'1.2-2'}}</span>
-          
           <span *ngSwitchCase="'number'">{{ element[col] | number:'1.0-0' }}</span>
-          
+          <span *ngSwitchCase="'status'" [ngClass]="getClassStatus(element[col])">{{ element[col] }}</span>
+
           <span *ngSwitchDefault>{{ element[col] }}</span>
         </ng-container>
     </td>

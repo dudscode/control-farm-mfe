@@ -168,4 +168,15 @@ export class GenericTableComponent implements OnInit, OnChanges {
     }
     return column.format || 'text';
   }
+  
+  getClassStatus(status: string): string {
+    switch (status) {
+      case 'Em Progresso':
+        return 'status-in-progress';
+      case 'Concluído':
+        return 'status-completed';
+      default:
+        return '';
+    }
+  }
 }

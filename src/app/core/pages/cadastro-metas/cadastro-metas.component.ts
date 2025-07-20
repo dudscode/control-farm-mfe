@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 import { IMetas, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-metas',
@@ -25,6 +26,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 export class CadastroMetasComponent {
   private _snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   formGroupMetas: FormGroup = new FormGroup({
     produto: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -81,6 +83,7 @@ export class CadastroMetasComponent {
     this.authService.setMetas(metas).subscribe(() => {
       this._snackBar.open('Meta cadastrada com sucesso!', 'Fechar', { duration: 3000 });
       this.formGroupMetas.reset();
+      this.router.navigate(['/home/metas']);
     }, error => {
       this._snackBar.open(`Erro ao cadastrar meta: ${error.message}`, 'Fechar', { duration: 3000 });
     });
