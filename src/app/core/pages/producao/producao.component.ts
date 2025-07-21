@@ -5,31 +5,18 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DashboardCardComponent } from '../../../shared/components/dashboard-card/dashboard-card.component';
 import { AssetUrlPipe } from '../../../shared/pipes/asset-url.pipe';
-import { VendasService } from '../../services/vendas.service';
 import { DashboardCardData } from '../../domain/vendas/dashboard-card-data.interface';
 import { ChartDataService } from '../../services/chart-data.service';
 import { GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
-import { DashboardProfitData } from '../../domain/vendas/venda-response.interface';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { finalize } from 'rxjs';
-import { IProduct, IStatus, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
+import { DashboardColheitaData, DashboardProductData, IProductAndVendas } from '../../domain/products.interface';
 
-interface IProductAndVendas {
-    amount: number;
-    date: string;
-    harvest: string;
-    id_product?: string;
-    location: string;
-    name: string;
-    nameHarvest: string;
-    value: number;
-    status: IStatus;
-    profit?: number;
-    vendas?: IVendaCadastro[];
-}
+
+
 @Component({
     selector: 'app-producao',
     imports: [CommonModule,
@@ -51,9 +38,11 @@ export class ProducaoComponent implements OnInit {
     @ViewChild('chart')
     chart!: ChartComponent;
     public chartOptions!: Partial<ApexOptions>;
+    public chartOptionsColhido!: Partial<ApexOptions>;
     loading: boolean = true;
     allProducts: IProductAndVendas[] = [];
-    chartData: DashboardProfitData[] = [];
+    chartData: DashboardProductData[] = [];
+    chartDataColheita: DashboardColheitaData[] = [];
 
     showSemProdutos: boolean = false;
     showErro: boolean = false;
@@ -124,18 +113,30 @@ export class ProducaoComponent implements OnInit {
         },]
     }
     createChart() {
-        this.chartData = this.allProducts.map(product => ({
-            produto: product.nameHarvest,
-            vendasPorMes: product.vendas?.map(venda => ({
-                mes: this.getMonthNumber(venda.date),
-                nome: this.getMonthName(venda.date),
-                valor: venda.price
-            })) || []
+        this.chartData = [{
+            status: 'Em produção',
+            quantity: this.calculateTotalStatusCount(this.allProducts, `Em produção`),
+        },
+        {
+            status: 'Aguardando',
+            quantity: this.calculateTotalStatusCount(this.allProducts, `Aguardando`),
+        },
+        {
+            status: 'Já colhido',
+            quantity: this.calculateTotalStatusCount(this.allProducts, `Já colhido`),
+        }];
+        this.chartDataColheita = this.allProducts.filter(p => p.status === 'Já colhido').map(p => ({
+            date: p.date,
+            quantity: p.amount,
         }));
-        this.chartOptions = this.chartDataService.mapDataToChartOptions(
+        this.chartOptions = this.chartDataService.mapDataToChartOptionsRadius(
                     this.chartData,
-                    'Lucro por produto'
+                    'Status Produção'
                 );
+        this.chartOptionsColhido = this.chartDataService.mapDataChartOptionsColhido(
+            this.chartDataColheita,
+            'Colheita por data'
+        );
     }
     getMonthNumber(date: string): number {
         return new Date(date).getMonth() + 1; 

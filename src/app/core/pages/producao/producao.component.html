@@ -8,14 +8,14 @@
     </button>
   </div>
   @if (!loading && showErro) {
-    <div class="error-message">
-      <p>Erro ao carregar os dados. Tente novamente mais tarde.</p>
-    </div>
+  <div class="error-message">
+    <p>Erro ao carregar os dados. Tente novamente mais tarde.</p>
+  </div>
   }
   @if (!loading && showSemProdutos) {
-    <div class="no-products-message">
-      <p>Nenhum produto encontrado.</p>
-    </div>
+  <div class="no-products-message">
+    <p>Nenhum produto encontrado.</p>
+  </div>
   }
 
   @if (!loading && !showSemProdutos && dashboardCards.length && allProducts.length) {
@@ -33,7 +33,14 @@
       <mat-card class="chart-card">
         <apx-chart [series]="chartOptions.series || []" [chart]="chartOptions.chart!" [xaxis]="chartOptions.xaxis!"
           [dataLabels]="chartOptions.dataLabels || {}" [plotOptions]="chartOptions.plotOptions!"
-          [title]="chartOptions.title!"></apx-chart>
+          [title]="chartOptions.title!" [labels]="chartOptions.labels || []"></apx-chart>
+
+      </mat-card>
+      <mat-card class="chart-card">
+        <apx-chart [series]="chartOptionsColhido.series || []" [chart]="chartOptionsColhido.chart!" [xaxis]="chartOptionsColhido.xaxis!"
+          [dataLabels]="chartOptionsColhido.dataLabels || {}" [plotOptions]="chartOptionsColhido.plotOptions!"
+          [title]="chartOptionsColhido.title!" [labels]="chartOptionsColhido.labels || []"></apx-chart>
+
       </mat-card>
     </div>
   </div>

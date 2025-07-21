@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { DashboardProfitData } from '../domain/vendas/venda-response.interface';
 import { ApexOptions, ApexAxisChartSeries } from 'ng-apexcharts';
+import { DashboardColheitaData, DashboardProductData } from '../domain/products.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChartDataService {
-  constructor() {}
+  constructor() { }
 
   mapDataToChartOptions(
     data: DashboardProfitData[],
@@ -104,4 +105,112 @@ export class ChartDataService {
 
     return chartOptions;
   }
+  mapDataToChartOptionsRadius(
+    data: DashboardProductData[],
+    titulo: string = 'Gráfico de Status'
+  ): Partial<ApexOptions> {
+    const series = data.map((item) => item.quantity);
+    const labels = data.map((item) => item.status);
+
+    return {
+      chart: {
+        type: 'radialBar',
+        height: 350
+      },
+      series: series,
+      labels: labels,
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            name: {
+              show: true
+            },
+            value: {
+              show: true,
+              formatter: function (val: number) {
+                  return val.toString(); 
+                }
+            },
+            total: {
+              show: true,
+              label: 'Total',
+              formatter: function () {
+                return series.reduce((acc, val) => acc + val, 0).toString();
+              }
+            }
+          }
+        }
+      },
+      legend: {
+        show: true,
+        position: 'bottom',
+        formatter: function (seriesName: string, opts: any) {
+          const label = opts.w.globals.labels[opts.seriesIndex];
+          const value = opts.w.globals.series[opts.seriesIndex];
+          return `${label}: ${value}`; 
+        }
+      },
+      title: {
+        text: titulo,
+        align: 'left'
+      }
+    };
+  }
+  mapDataChartOptionsColhido(
+    data: DashboardColheitaData[],
+    titulo: string = 'Gráfico de Colhidos'
+  ): Partial<ApexOptions> {
+    const labels = data.map((item) => {
+      const date = new Date(item.date);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${day}/${month}/${year} ${hours}:${minutes}`;
+    });
+    const quantities = data.map((item) => item.quantity);
+
+    return {
+      chart: {
+        type: 'line',
+        height: 350,
+        zoom: {
+          enabled: false
+        }
+      },
+      series: [
+        {
+          name: 'Quantidade',
+          data: quantities
+        }
+      ],
+      xaxis: {
+        categories: labels,
+        title: {
+          text: 'Data'
+        }
+      },
+      yaxis: {
+        title: {
+          text: 'Quantidade Colhida'
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      title: {
+        text: titulo,
+        align: 'left'
+      },
+      legend: {
+        show: false
+      }
+    };
+  }
+
+
 }
