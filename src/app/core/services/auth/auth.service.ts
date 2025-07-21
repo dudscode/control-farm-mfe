@@ -60,47 +60,86 @@ export class AuthService {
     );
   }
   getProductAndVendas(): Observable<any[]> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    const productsQuery = query(
+      collection(this.firestore, 'product'),
+      where('uid', '==', user.uid)
+    );
+
+    return from(getDocs(productsQuery)).pipe(
+      switchMap(snapshot => {
+        const produtos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+
+        if (produtos.length === 0) {
+          return of([]);
+        }
+
+        const produtosComVendas$ = produtos.map(produto => {
+          const vendasQuery = query(
+            collection(this.firestore, 'sales'),
+            where('uid', '==', user.uid),
+            where('id_product', '==', produto.id)
+          );
+
+          return from(getDocs(vendasQuery)).pipe(
+            map(vendasSnap => {
+              const vendas = vendasSnap.docs.map(v => ({ id: v.id, ...v.data() }));
+              return {
+                ...produto,
+                vendas
+              };
+            })
+          );
+        });
+
+        return combineLatest(produtosComVendas$);
+      }),
+      catchError(err => throwError(() => new Error(`Erro ao buscar produtos: ${err.message}`)))
+    );
+  }
+  getVendasAndProduct(): Observable<any[]> {
   const user = this.auth.currentUser;
   if (!user) {
     return throwError(() => new Error('Usuário não autenticado.'));
   }
 
-  const productsQuery = query(
-    collection(this.firestore, 'product'),
+  const vendasQuery = query(
+    collection(this.firestore, 'sales'),
     where('uid', '==', user.uid)
   );
 
-  return from(getDocs(productsQuery)).pipe(
+  return from(getDocs(vendasQuery)).pipe(
     switchMap(snapshot => {
-      const produtos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+      const vendas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
 
-      if (produtos.length === 0) {
-        return of([]); 
+      if (vendas.length === 0) {
+        return of([]);
       }
 
-      const produtosComVendas$ = produtos.map(produto => {
-        const vendasQuery = query(
-          collection(this.firestore, 'sales'),
-          where('uid', '==', user.uid),
-          where('id_product', '==', produto.id)
-        );
+      const vendasComProduto$ = vendas.map(venda => {
+        const produtoRef = doc(this.firestore, 'product', venda.id_product);
 
-        return from(getDocs(vendasQuery)).pipe(
-          map(vendasSnap => {
-            const vendas = vendasSnap.docs.map(v => ({ id: v.id, ...v.data() }));
+        return from(getDoc(produtoRef)).pipe(
+          map(produtoSnap => {
+            const produto = produtoSnap.exists() ? produtoSnap.data() : null;
             return {
-              ...produto,
-              vendas
+              ...venda,
+              produto
             };
           })
         );
       });
 
-      return combineLatest(produtosComVendas$); // Espera todas as vendas serem carregadas
+      return combineLatest(vendasComProduto$);
     }),
-    catchError(err => throwError(() => new Error(`Erro ao buscar produtos: ${err.message}`)))
+    catchError(err => throwError(() => new Error(`Erro ao buscar vendas: ${err.message}`)))
   );
 }
+
 
   getProductNames(): Observable<any[]> {
     const user = this.auth.currentUser;
@@ -134,19 +173,43 @@ export class AuthService {
       return throwError(() => new Error('Usuário não autenticado.'));
     }
     const productCollectionRef = collection(this.firestore, 'product');
-  const productDocRef = doc(productCollectionRef); // gera ID automático
-  const productId = productDocRef.id;
+    const productDocRef = doc(productCollectionRef);
+    const productId = productDocRef.id;
 
-  const productDataWithId = {
-    ...data,
-    id_product: productId,
-    uid: user.uid
-  };
+    const productDataWithId = {
+      ...data,
+      id_product: productId,
+      uid: user.uid
+    };
 
-  return from(setDoc(productDocRef, productDataWithId, { merge: true })).pipe(
-    catchError(error => throwError(() => new Error(`Erro ao salvar produto: ${error.message}`)))
-  );
+    return from(setDoc(productDocRef, productDataWithId, { merge: true })).pipe(
+      catchError(error => throwError(() => new Error(`Erro ao salvar produto: ${error.message}`)))
+    );
   }
+  updateProduct(data: IProduct): Observable<any> {
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    if (!data.id_product) {
+      return throwError(() => new Error('ID do produto é obrigatório para atualizar.'));
+    }
+
+    const productDocRef = doc(this.firestore, 'product', data.id_product);
+
+    const updateData = {
+      saled: data.saled,
+      amount_available: data.amount_available
+    };
+
+    return from(updateDoc(productDocRef, updateData)).pipe(
+      catchError(error =>
+        throwError(() => new Error(`Erro ao atualizar produto: ${error.message}`))
+      )
+    );
+  }
+
 
   setMetas(data: IMetas): Observable<any> {
     const user = this.auth.currentUser;
@@ -160,23 +223,23 @@ export class AuthService {
     );
   }
   updateMeta(data: any): Observable<any> {
-  const user = this.auth.currentUser;
-  if (!user) {
-    return throwError(() => new Error('Usuário não autenticado.'));
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    if (!data.id) {
+      return throwError(() => new Error('ID da meta não informado.'));
+    }
+
+    const metasDocRef = doc(this.firestore, 'goals', data.id);
+
+    return from(
+      setDoc(metasDocRef, { ...data, uid: user.uid }, { merge: true })
+    ).pipe(
+      catchError(error => throwError(() => new Error(`Erro ao salvar metas: ${error.message}`)))
+    );
   }
-
-  if (!data.id) {
-    return throwError(() => new Error('ID da meta não informado.'));
-  }
-
-  const metasDocRef = doc(this.firestore, 'goals', data.id);
-
-  return from(
-    setDoc(metasDocRef, { ...data, uid: user.uid }, { merge: true })
-  ).pipe(
-    catchError(error => throwError(() => new Error(`Erro ao salvar metas: ${error.message}`)))
-  );
-}
 
 
   getVendasByUser(idProduct: string): Observable<any[]> {
@@ -218,40 +281,40 @@ export class AuthService {
   }
 
   getMetas(): Observable<any[]> {
-  const user = this.auth.currentUser;
-  if (!user) {
-    return throwError(() => new Error('Usuário não autenticado.'));
+    const user = this.auth.currentUser;
+    if (!user) {
+      return throwError(() => new Error('Usuário não autenticado.'));
+    }
+
+    const metasCollection = collection(this.firestore, 'goals');
+    const q = query(metasCollection, where('uid', '==', user.uid));
+
+    return from(getDocs(q)).pipe(
+      switchMap(snapshot => {
+        const metas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
+
+        if (metas.length === 0) {
+          return of([]); 
+        }
+
+        const metasComProdutos$ = metas.map(meta => {
+          const produtoRef = doc(this.firestore, 'product', meta.id_product);
+          return from(getDoc(produtoRef)).pipe(
+            map(produtoSnap => {
+              const produtoData = produtoSnap.exists() ? produtoSnap.data() : null;
+              return {
+                ...meta,
+                produto: produtoData
+              };
+            })
+          );
+        });
+
+        return combineLatest(metasComProdutos$); 
+      }),
+      catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
+    );
   }
-
-  const metasCollection = collection(this.firestore, 'goals');
-  const q = query(metasCollection, where('uid', '==', user.uid));
-
-  return from(getDocs(q)).pipe(
-    switchMap(snapshot => {
-      const metas = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any[];
-
-      if (metas.length === 0) {
-        return of([]); // Nenhuma meta
-      }
-
-      const metasComProdutos$ = metas.map(meta => {
-        const produtoRef = doc(this.firestore, 'product', meta.id_product);
-        return from(getDoc(produtoRef)).pipe(
-          map(produtoSnap => {
-            const produtoData = produtoSnap.exists() ? produtoSnap.data() : null;
-            return {
-              ...meta,
-              produto: produtoData
-            };
-          })
-        );
-      });
-
-      return combineLatest(metasComProdutos$); // Espera todos os produtos serem carregados
-    }),
-    catchError(err => throwError(() => new Error(`Erro ao buscar metas: ${err.message}`)))
-  );
-}
 
 
   setNotification(data: any): Observable<any> {

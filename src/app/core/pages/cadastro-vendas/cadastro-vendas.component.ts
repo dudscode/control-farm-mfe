@@ -10,6 +10,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {  INotification, IProductName, IStatus, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
 import { NgxMaskDirective } from 'ngx-mask';
 import { finalize } from 'rxjs';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-cadastro-vendas',
   imports: [FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
@@ -23,6 +24,7 @@ import { finalize } from 'rxjs';
 export class CadastroVendasComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   formGroupVendas: FormGroup = new FormGroup({
     quantidade: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -36,12 +38,13 @@ export class CadastroVendasComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getProducts().subscribe((products) => {
-      this.produtos = products;
+      this.produtos = products.filter(p => p.saled === false);
       if (!this.produtos.length) {
         this.formGroupVendas.get('produto')?.disable();
+        this.formGroupVendas.get('quantidade')?.disable();
         this._snackBar.open('Nenhum produto encontrado', 'Fechar', { duration: 3000 });
       }
-    }, error => {
+    }, _ => {
       this._snackBar.open('Erro ao carregar produtos', 'Fechar', { duration: 3000 });
     });
   }
@@ -67,8 +70,19 @@ export class CadastroVendasComponent implements OnInit {
     this.authService.setSales(vendaCadastro).subscribe(() => {
       this._snackBar.open('Venda cadastrada com sucesso!', 'Fechar', { duration: 3000 });
       this.validaMeta();
+      this.updateProduct();
     }, error => {
       this._snackBar.open(`Erro ao cadastrar venda: ${error.message}`, 'Fechar', { duration: 3000 });
+    });
+  }
+  updateProduct(): void {
+    const existProducts = this.getProductSelect();
+    existProducts.amount_available -= this.formGroupVendas.value.quantidade;
+    existProducts.saled = existProducts.amount_available ==existProducts.amount;
+    this.authService.updateProduct(existProducts).subscribe(() => {
+      this._snackBar.open('Produto atualizado com sucesso!', 'Fechar', { duration: 3000 });
+    }, error => {
+      this._snackBar.open(`Erro ao atualizar produto: ${error.message}`, 'Fechar', { duration: 3000 });
     });
   }
   validaMeta() {
@@ -91,6 +105,7 @@ export class CadastroVendasComponent implements OnInit {
     this.authService.getVendasByUser(id_product).subscribe((vendas: any) => {
       if (!vendas || vendas.length === 0) {
         this.formGroupVendas.reset();
+        this.router.navigate(['/home/vendas']);
         return;
       }
       vendas.forEach((venda: IVendaCadastro) => {
@@ -107,6 +122,7 @@ export class CadastroVendasComponent implements OnInit {
         if (meta.completed) {
           this.cadastrarNotificacao();
           this._snackBar.open('Meta atingida!', 'Fechar', { duration: 3000 });
+          this.router.navigate(['/home/metas']);
         }
       }, error => {
         console.error('Erro ao atualizar meta:', error);
@@ -125,6 +141,10 @@ export class CadastroVendasComponent implements OnInit {
 
   getProductSelect(){
     return this.produtos.find(p => p.id === this.formGroupVendas.value.produto) || '';
+  }
+  getQuantityProductSelect() {
+    const product = this.getProductSelect();
+    return product ? product.amount_available : 0;
   }
 
   formateToDecimal(value: any): number {

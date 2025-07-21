@@ -7,12 +7,7 @@
 
     <form [formGroup]="formGroupVendas">
 
-        <mat-form-field>
-            <mat-label>Quantidade</mat-label>
-            <input matInput formControlName="quantidade" type="number" placeholder="0 " min="0">
-        </mat-form-field>
-
-        <mat-form-field>
+         <mat-form-field>
             <mat-label>Produto - Safra</mat-label>
 
             <select matNativeControl formControlName="produto">
@@ -21,6 +16,13 @@
                 }
             </select>
         </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Quantidade</mat-label>
+            <input matInput formControlName="quantidade" type="number" placeholder="0 " min="0" [max]="getQuantityProductSelect()"
+                >
+        </mat-form-field>
+       
 
 
         <mat-form-field>

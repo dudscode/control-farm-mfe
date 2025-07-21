@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import {MatSelectModule} from '@angular/material/select';
 import { IProduct, IProductName, IStatus, IVendaCadastro } from '../../domain/vendas/cadastro.interface';
 import { NgxMaskDirective } from 'ngx-mask';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-cadastro-produtos',
   standalone: true,
@@ -23,6 +24,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 export class CadastroProdutosComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
+  private router = inject(Router);
   
 
   formGroupProduto: FormGroup = new FormGroup({
@@ -58,6 +60,8 @@ export class CadastroProdutosComponent implements OnInit {
     const newProduct = this.formGroupProduto.value;
     const product: IProduct = {
       amount: newProduct.quantidade,
+      amount_available: newProduct.quantidade,
+      saled: false,
       date: new Date().toISOString(),
       harvest: newProduct.safra,
       location: newProduct.localizacao,
@@ -68,7 +72,8 @@ export class CadastroProdutosComponent implements OnInit {
 
     this.authService.setProduct(product).subscribe(() => {
       this._snackBar.open('Produto cadastrado com sucesso!', 'Fechar', { duration: 3000 });
-      
+      this.formGroupProduto.reset();
+      this.router.navigate(['/home/producao']);
     }, error => {
       this._snackBar.open(`Erro ao cadastrar produto: ${error.message}`, 'Fechar', { duration: 3000 });
     });

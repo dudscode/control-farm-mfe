@@ -12,27 +12,17 @@
   <div class="dashboard-content">
     <div class="cards">
       @for(card of dashboardCards; track card) {
-      <app-dashboard-card
-        [icon]="card.icon ?? '' | assetUrl"
-        [cardMetric]="card.cardMetric"
-        [efficiencyPercentage]="card.efficiencyPercentage"
-        [label]="card.label"
-        [isCurrency]="card.isCurrency"
-        [isPositive]="card.isPositive"
-      ></app-dashboard-card>
+      <app-dashboard-card [icon]="card.icon ?? '' | assetUrl" [cardMetric]="card.cardMetric"
+        [efficiencyPercentage]="card.efficiencyPercentage" [label]="card.label" [isCurrency]="card.isCurrency"
+        [isPositive]="card.isPositive" [showFooter]="false"></app-dashboard-card>
       }
     </div>
 
     <div class="chart">
       <mat-card class="chart-card">
-        <apx-chart
-          [series]="chartOptions.series || []"
-          [chart]="chartOptions.chart!"
-          [xaxis]="chartOptions.xaxis!"
-          [dataLabels]="chartOptions.dataLabels || {}"
-          [plotOptions]="chartOptions.plotOptions!"
-          [title]="chartOptions.title!"
-        ></apx-chart>
+        <apx-chart [series]="chartOptions.series || []" [chart]="chartOptions.chart!" [xaxis]="chartOptions.xaxis!"
+          [dataLabels]="chartOptions.dataLabels || {}" [plotOptions]="chartOptions.plotOptions!"
+          [title]="chartOptions.title!"></apx-chart>
       </mat-card>
     </div>
   </div>
@@ -40,20 +30,20 @@
   <div class="products">
     <mat-card class="products__card">
       <div class="products__header">
-        <h2>Produtos</h2>
+        <h2>Vendas</h2>
       </div>
-      @if(!!products){
+      @if(!!allVendas){
       <div class="products__content">
-        <app-generic-table
-          [data]="products"
-          [columns]="{
-            productName: 'Produto',
-            locationLotes: 'Localização',
-            dateTime: { label: 'Data', format: 'date' },
-            piece: { label: 'Quantidade', format: 'number' },
-            lucros: { label: 'Lucros', format: 'currency' }
-          }"
-        >
+        <app-generic-table [data]="allVendas" [columns]="{
+            nameHarvest: 'Produto - Safra',
+            location: 'Localização',
+            date: {
+              label: 'Data',
+              format: 'date'
+            },
+            amount: { label: 'Quantidade', format: 'number' },
+            venda: { label: 'Valor', format: 'currency' }
+          }">
         </app-generic-table>
       </div>
       }

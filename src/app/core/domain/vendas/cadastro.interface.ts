@@ -11,6 +11,8 @@ export interface IProductName {
 }
 export interface IProduct {
   amount: number;
+  amount_available: number;
+  saled: boolean;
   date: string;
   harvest: string;
   id_product?: string;

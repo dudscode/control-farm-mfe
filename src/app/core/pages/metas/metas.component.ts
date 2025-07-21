@@ -68,7 +68,8 @@ export class MetasComponent implements OnInit {
     if (metaLucro === 0) {
       return 0;
     }
-    return (lucro / metaLucro) * 100;
+    const lucroPercentual = (lucro / metaLucro) * 100;
+    return parseFloat(lucroPercentual.toFixed(2));
   }
 
   openCadastroMetas() {
